@@ -14,8 +14,16 @@ print "Socket Created"
  
 host = "192.168.1.176";
 port = 2081;
- 
- 
+buffer = 20
+
+returnMessageType = {
+	'0x0' : "Ok",
+	'0x1' : "Error: Brewing",
+	'0x2' : "Error: No carafe",
+	'0x3' : "Error: Not enough water",
+	'0x4' : "Error: You sent wrong value",
+}
+
 #Connect to remote server
 s.connect((host , port))
 
@@ -71,7 +79,7 @@ def coffeeStartFunc(cupsStart, strenghtStart, grindStart, hotPlateTime): #cupsSt
 	finalHex = "33" + cupsHex + strengthHex + hotPlateHex + grindHex + "7e"
 	return finalHex
 	
-def coffeeHotPlate(timeValue): #Timevalue is for how long it will be on before auto turn off. Lowest value is 5 min. Max value is ?
+def coffeeHotPlate(timeValue): #Timevalue is for how long the hot plate will be on before auto turning off. Lowest value is 5 min. Max value is ?
 	hotPlateHex = ""
 	if timeValue < 5:
 		print "Error: Time must be minimum 5. Autosetting 5min"
@@ -85,7 +93,16 @@ def coffeeStartWithCurrentSettings():
 	return "37"
 
 def sendCommand(valueSend):
-	s.send(valueSend.decode('hex'))		
-
-sendCommand(coffeeHotPlate(5))
+	s.send(valueSend.decode('hex'))
+	
+def returnMessage(incomingData):
+	a = array("B", incomingData)		
+	b = map(hex, a)
+	print b
+	returnMessage = b[1]
+	print "Return: " + returnMessageType[returnMessage]
+		
+	
+sendCommand(coffeeSetCupsFunc(6)) # Send command
+returnMessage(s.recv(buffer)) # display return message
 s.close
