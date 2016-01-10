@@ -56,13 +56,6 @@ cupsMessageType = {
 	'0x6b' : "11",
 	'0x6c' : "12",
 }
-#try:
-    #remote_ip = socket.gethostbyname( host )
- 
-#except socket.gaierror:
-    ##could not resolve
-    #print 'Hostname could not be resolved. Exiting'
-    #sys.exit()
  
 #Connect to remote server
 s.connect((host , port))
@@ -71,7 +64,7 @@ print 'Socket Connected to ' + host + ' on ip ' + host
 while 1:
 	reply = s.recv(4096)
 	incommingCommandFirst = reply
-	if incommingCommandFirst == incommingCommandSecond:
+	if incommingCommandFirst == incommingCommandSecond: # only display message if something is changed
 		pass
 	else:
 		incommingCommandSecond = reply		
