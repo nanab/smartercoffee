@@ -22,7 +22,7 @@ parser.add_argument("-f", help="Which function to call, 1 = startbrew whit optio
 parser.add_argument("-c", help="Define how many cups that will be brewed choose between 1 - 12", type=int)
 parser.add_argument("-g", help="Define is grinder or filter should be used. 1 for grinder, 0 for filter", type=int)
 parser.add_argument("-m", help="Define how many minutes hotplateshould be on. define in minutes minimum 5", type=int)
-parser.add_argument("-s", help="Define whick strenght it should be. choose between 1 -3", type=int)
+parser.add_argument("-s", help="Define whick strenght it should be. choose between 1 - 3 ", type=int)
 args = parser.parse_args()
 
 returnMessageType = {
@@ -47,17 +47,18 @@ def coffeeSetCupsFunc(number): #cups value can be between 1 - 12. Syntax for cup
 	coffeeSetCups = "36" + cupsHex + "7e"
 	return coffeeSetCups
 	
-def coffeeSetStrengthFunc(numberStrength): # strength value can be between 1 - 3
+def coffeeSetStrengthFunc(numberStrength): # strength value can be between 1 - 3 when send to machine the value vill be converterd to 0 - 2
+	numberStrength = numberStrength - 1
 	strenghtHex = ""
-	if numberStrength >= 1 and numberStrength <= 3:
+	if numberStrength >= 0 and numberStrength <= 2:
 		strengthHex = "%0.2X" % numberStrength # convert to hex
 	else:
 		print "Error: coffe strength must be a value between 1 - 3 autosetting 1"
-		strengthHex = "01"
+		strengthHex = "00"
 	coffeeSetStrength = "35" + strengthHex + "7e"
 	return coffeeSetStrength
 	
-def coffeeStartFunc(cupsStart, strenghtStart, grindStart, hotPlateTime): #cupsStart = how many cups will be made max 12 min 1, 01 - 09 10 = 0a 11 = 0b 12 = 0c. strenghtStart = how strong the coffe will be 00 - 02. grindStart = 01 = on 00 = off (grinder, filter). hotPlateTime = how long the hotplate will stay on after finished brewing minimum 5min 
+def coffeeStartFunc(cupsStart, strenghtStart, grindStart, hotPlateTime): #cupsStart = how many cups will be made max 12 min 1, 01 - 09 10 = 0a 11 = 0b 12 = 0c. strenghtStart = how strong the coffe will be 1 - 3. grindStart = 01 = on 00 = off (grinder, filter). hotPlateTime = how long the hotplate will stay on after finished brewing minimum 5min 
 	cupsHex = ""
 	strenghtHex = ""
 	grindHex = ""
@@ -67,12 +68,12 @@ def coffeeStartFunc(cupsStart, strenghtStart, grindStart, hotPlateTime): #cupsSt
 	else:
 		print "Error: coffe cups must be a value between 1 - 12 autosetting 1 cup"
 		cupsHex = "01"
-		
-	if strenghtStart >= 1 and strenghtStart <= 3:
+	strenghtStart = strenghtStart -1	
+	if strenghtStart >= 0 and strenghtStart <= 2:
 		strengthHex = "%0.2X" % strenghtStart # convert to hex
 	else:
 		print "Error: coffe strength must be a value between 1 - 3 autosetting 1"
-		strengthHex = "01"	
+		strengthHex = "00"	
 		
 	if grindStart == 1:
 		grindHex = "01"
