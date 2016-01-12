@@ -42,7 +42,7 @@ strenghtMessageType = {
 	'0x1' : "2",
 	'0x2' : "3",		
 } 
-cupsMessageType = {
+cupsMessageType = { #TODO investigate what the first number does?
 	'0x61' : "1",
 	'0x62' : "2",
 	'0x63' : "3",
@@ -55,6 +55,18 @@ cupsMessageType = {
 	'0x6a' : "10",
 	'0x6b' : "11",
 	'0x6c' : "12",
+	'0x81' : "1",
+	'0x82' : "2",
+	'0x83' : "3",
+	'0x84' : "4",
+	'0x85' : "5",
+	'0x86' : "6",
+	'0x87' : "7",
+	'0x88' : "8",
+	'0x89' : "9",
+	'0x8a' : "10",
+	'0x8b' : "11",
+	'0x8c' : "12",
 }
  
 #Connect to remote server
@@ -70,7 +82,7 @@ while 1:
 		incommingCommandSecond = reply		
 		a = array("B", reply)		
 		b = map(hex, a)
-		#print b
+		print b
 		deviceMessage = b[0]
 		statusMessage = b[1]
 		waterLevelMessage = b[2]
