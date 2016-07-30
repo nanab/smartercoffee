@@ -13,16 +13,16 @@ except socket.error:
      
 print "Socket Created"
  
-host = "192.168.1.176" #Set ip for coffe brewer
+host = "192.168.0.86" #Set ip for coffee brewer
 port = 2081
 buffer = 20
 
 parser = argparse.ArgumentParser(description='Socket client for Smarter Coffe machine')
-parser.add_argument("-f", help="Which function to call, 1 = startbrew whit options -c -g -m -s, 2 = startbrew whit settings already on brewer, 3 = start hotplate whit option -m, 4 = set cups whit option -c, 5 = set strength whit option -2, 6 = defin grinder or filter whit option -g", type=int)
+parser.add_argument("-f", help="Which function to call, 1 = startbrew with options -c -g -m -s, 2 = startbrew with settings already on brewer, 3 = start hotplate with option -m, 4 = set cups with option -c, 5 = set strength with option -2, 6 = define beans or filter with option -g", type=int)
 parser.add_argument("-c", help="Define how many cups that will be brewed choose between 1 - 12", type=int)
-parser.add_argument("-g", help="Define is grinder or filter should be used. 1 for grinder, 0 for filter", type=int)
+parser.add_argument("-g", help="Define if beans or filter should be used. 1 for beans, 2 for filter", type=int)
 parser.add_argument("-m", help="Define how many minutes hotplateshould be on. define in minutes minimum 5", type=int)
-parser.add_argument("-s", help="Define whick strenght it should be. choose between 1 - 3 ", type=int)
+parser.add_argument("-s", help="Define which strength it should be. choose between 1 - 3 ", type=int)
 args = parser.parse_args()
 
 returnMessageType = {
@@ -58,7 +58,7 @@ def coffeeSetStrengthFunc(numberStrength): # strength value can be between 1 - 3
 	coffeeSetStrength = "35" + strengthHex + "7e"
 	return coffeeSetStrength
 	
-def coffeeStartFunc(cupsStart, strenghtStart, grindStart, hotPlateTime): #cupsStart = how many cups will be made max 12 min 1, 01 - 09 10 = 0a 11 = 0b 12 = 0c. strenghtStart = how strong the coffe will be 1 - 3. grindStart = 01 = on 00 = off (grinder, filter). hotPlateTime = how long the hotplate will stay on after finished brewing minimum 5min 
+def coffeeStartFunc(cupsStart, strenghtStart, grindStart, hotPlateTime): #cupsStart = how many cups will be made max 12 min 1, 01 - 09 10 = 0a 11 = 0b 12 = 0c. strenghtStart = how strong the coffe will be 1 - 3. grindStart = 01 = on 00 = off (beans, filter). hotPlateTime = how long the hotplate will stay on after finished brewing minimum 5min 
 	cupsHex = ""
 	strenghtHex = ""
 	grindHex = ""
@@ -103,7 +103,7 @@ def coffeeHotPlate(timeValue): #Timevalue is for how long the hot plate will be 
 def coffeeStartWithCurrentSettings():
 	return "37"
 
-def coffeeSetGrinder(valueGrinder): # TODO 
+def coffeeSetbeans(valuebeans): # TODO 
 	pass
 	
 def sendCommand(valueSend):
@@ -145,13 +145,12 @@ if args.f:
 				print "Error: specify args to function" #TODO Better text
 		elif args.f == 6:
 			if args.g:
-				sendCommand(coffeeSetGrinder(args.g)) #Send command set grinder or filter
+				sendCommand(coffeeSetbeans(args.g)) #Send command set beans or filter
 			else:
 				print "Error: specify args to function" #TODO Better text
 	else:
 		print "Function must be between 1 -6"
 else:
-	print "You must specify an function! -f 1 = startbrew whit options -c -g -m -s, 2 = startbrew whit settings already on brewer, 3 = start hotplate whit option -m, 4 = set cups whit option -c, 5 = set strength whit option -s, 6 = defin grinder or filter whit option -g"
+	print "You must specify an function! -f 1 = startbrew whit options -c -g -m -s, 2 = startbrew whit settings already on brewer, 3 = start hotplate whit option -m, 4 = set cups whit option -c, 5 = set strength whit option -s, 6 = defin beans or filter whit option -g"
 	exit()
 #
-
