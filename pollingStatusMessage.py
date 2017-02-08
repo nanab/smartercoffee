@@ -22,6 +22,7 @@ statusMessageType = {
     '0x6' : "Filter, OK to start",
     '0x7' : "Beans, OK to start",
     '0x20' : "Filter, No carafe",
+    '0x23' : "Beans, Not enough water",
     '0x22' : "Beans, No carafe",
     '0x45' : "Filter, Done",
     '0x47' : "Beans, Done",
