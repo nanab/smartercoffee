@@ -134,11 +134,7 @@ cupsMessageType = { #TODO investigate what the first number does?
 #Connect to remote server
 s.connect((host, port))
 
-if command_line.notify == 'GNOME':
-    Gnome =  Notify.Notification.new("Smarter Coffee", \
-                                   "Socket created and connected to " + host)
-    Gnome.show()
-else:
+if command_line.notify == None:
     print 'Socket Connected to ' + host + ' on ip ' + host
 
 while 1:
@@ -180,17 +176,26 @@ while 1:
 
             if len(c) > 0:
                 if a[1] != c[1]:
-                    Gnome =  Notify.Notification.new("Smarter Coffee", textMessageStatus)
+                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageStatus)
                     Gnome.show()
                 if a[2] != c[2]:
-                    Gnome =  Notify.Notification.new("Smater Coffee", textMessageWater)
+                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageWater)
                     Gnome.show()
                 if a[4] != c[4]:
-                    Gnome =  Notify.Notification.new("Smarter Coffee", textMessageStrength)
+                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageStrength)
                     Gnome.show()
                 if a[5] != c[5]:
-                    Gnome =  Notify.Notification.new("Smarter Coffee", textMessageCups)
+                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageCups)
                     Gnome.show()
+            else:
+                Gnome = Notify.Notification.new("Smarter Coffee", \
+                                        "Socket created and connected to " + host + "\n" + \
+                                        textMessageStatus + "\n" + \
+                                        textMessageWater + "\n" + \
+                                        textMessageStrength + "\n" + \
+                                        textMessageCups)
+                Gnome.show()
+
         else:
             print
             print textMessageStatus
