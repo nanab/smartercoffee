@@ -14,7 +14,7 @@ except socket.error:
 
 print 'Socket Created'
 
-host = '192.168.1.3';
+host = '192.168.1.18';
 port = 2081;
 statusMessageType = {
     '0x4' : "Filter, ?",
@@ -46,6 +46,18 @@ strengthMessageType = {
     '0x2' : "strong",
 }
 cupsMessageType = { #TODO investigate what the first number does?
+    '0x21' : "1",
+    '0x22' : "2",
+    '0x23' : "3",
+    '0x24' : "4",
+    '0x25' : "5",
+    '0x26' : "6",
+    '0x27' : "7",
+    '0x28' : "8",
+    '0x29' : "9",
+    '0x2a' : "10",
+    '0x2b' : "11",
+    '0x2c' : "12",
     '0x31' : "1",
     '0x32' : "2",
     '0x33' : "3",
