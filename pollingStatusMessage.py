@@ -8,7 +8,7 @@ import argparse
 # Accept and parse notify arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--notify', action='store', \
-                    choices=['GNOME', ''], \
+                    choices=['GNOME'], \
                     help='Select notify mode')
 
 try:
@@ -27,20 +27,17 @@ try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 except socket.error:
     if command_line.notify == 'GNOME':
-        Gnome=Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket")
+        Gnome =  Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket")
         Gnome.show()
     else:
         print 'Failed to create socket'
     sys.exit()
 
-if command_line.notify == 'GNOME':
-    Gnome=Notify.Notification.new("Smarter Coffee", "Coffee socket created")
-    Gnome.show()
-else:
+if command_line.notify == None:
     print 'Socket Created'
 
-host = '192.168.1.18';
-port = 2081;
+host = '192.168.1.18'
+port = 2081
 statusMessageType = {
     '0x4' : "Filter, ?",
     '0x5' : "Filter, OK to start",
@@ -120,18 +117,6 @@ cupsMessageType = { #TODO investigate what the first number does?
     '0x8a' : "10",
     '0x8b' : "11",
     '0x8c' : "12",
-    '0x21' : "1",
-    '0x22' : "2",
-    '0x23' : "3",
-    '0x24' : "4",
-    '0x25' : "5",
-    '0x26' : "6",
-    '0x27' : "7",
-    '0x28' : "8",
-    '0x29' : "9",
-    '0x2a' : "10",
-    '0x2b' : "11",
-    '0x2c' : "12",
     '0xc1' : "1",
     '0xc2' : "2",
     '0xc3' : "3",
@@ -147,11 +132,11 @@ cupsMessageType = { #TODO investigate what the first number does?
 }
 
 #Connect to remote server
-s.connect((host , port))
+s.connect((host, port))
 
 if command_line.notify == 'GNOME':
-    Gnome=Notify.Notification.new("Smarter Coffee", \
-                                   "Socket Connected to " + host)
+    Gnome =  Notify.Notification.new("Smarter Coffee", \
+                                   "Socket created and connected to " + host)
     Gnome.show()
 else:
     print 'Socket Connected to ' + host + ' on ip ' + host
@@ -171,51 +156,44 @@ while 1:
         strengthMessage = b[4]
         cupsMessage = b[5]
 
+        try:
+            textMessageStatus = 'Status: ' + statusMessageType[statusMessage]
+        except:
+            textMessageStatus = 'Status: Unknown (' + statusMessage +')'
+    
+        try:
+            textMessageWater = 'Water Level: ' + waterLevelMessageType[waterLevelMessage]
+        except:
+            textMessageWater = 'Water Level: Unknown (' + waterLevelMessage +')'
+
+        try:
+            textMessageStrength = 'Strength: ' + strengthMessageType[strengthMessage]
+        except:
+            textMessageStrength = 'Strength: Unknown (' + strengthMessage +')'
+
+        try:
+            textMessageCups = 'Cups: ' + cupsMessageType[cupsMessage]
+        except:
+            textMessageCups = 'Cups: Unknown (' + cupsMessage +')'
+
         if command_line.notify == 'GNOME':
+
             if len(c) > 0:
                 if a[1] != c[1]:
-                    try:
-                        Message = 'Coffee Status: ' + statusMessageType[statusMessage]
-                    except:
-                        Message = 'Coffee Status: Unknown (' + statusMessage +')'
-                    Gnome=Notify.Notification.new("Smarter Coffee", Message)
+                    Gnome =  Notify.Notification.new("Smarter Coffee", textMessageStatus)
                     Gnome.show()
                 if a[2] != c[2]:
-                    try:
-                        Message = 'Coffee Water Level: ' + waterLevelMessageType[waterLevelMessage]
-                    except:
-                        Message = 'Coffee Water Level: Unknown (' + waterLevelMessage +')'
-                    Gnome=Notify.Notification.new("Smater Coffee", Message)
+                    Gnome =  Notify.Notification.new("Smater Coffee", textMessageWater)
                     Gnome.show()
                 if a[4] != c[4]:
-                    try:
-                        Message = 'Coffee Strength: ' + strengthMessageType[strengthMessage]
-                    except:
-                        Message = 'Coffee Strength: Unknown (' + strengthMessage +')'
-                    Gnome=Notify.Notification.new("Smarter Coffee", Message)
+                    Gnome =  Notify.Notification.new("Smarter Coffee", textMessageStrength)
                     Gnome.show()
                 if a[5] != c[5]:
-                    try:
-                        Message = 'Coffee Cups: ' + cupsMessageType[cupsMessage]
-                    except:
-                        Message = 'Coffee Cups: Unknown (' + cupsMessage +')'
-                    Gnome=Notify.Notification.new("Smarter Coffee", Message)
+                    Gnome =  Notify.Notification.new("Smarter Coffee", textMessageCups)
                     Gnome.show()
         else:
             print
-            try:
-                print 'Status:', statusMessageType[statusMessage]
-            except:
-                print 'Status: Unknown (', statusMessage, ')'
-            try:
-                print 'Water Level:', waterLevelMessageType[waterLevelMessage]
-            except:
-                print 'Water Level: Unknown (', waterLevelMessage, ')'
-            try:
-                print 'Strength:', strengthMessageType[strengthMessage]
-            except:
-                print 'Strength: Unknown(', strengthMessage, ')'
-            try:
-                print 'Cups:', cupsMessageType[cupsMessage]
-            except:
-                print 'Cups: Unknown (', cupsMessage, ')'
+            print textMessageStatus
+            print textMessageWater
+            print textMessageStrength
+            print textMessageCups
