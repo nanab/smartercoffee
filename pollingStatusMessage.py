@@ -47,6 +47,7 @@ statusMessageType = {
     '0x22' : "Beans, No carafe",
     '0x23' : "Beans, Not enough water",
     '0x45' : "Filter, Done",
+    '0x46' : "Beans, No carafe, Hotplate On",
     '0x47' : "Beans, Done",
     '0x53' : "Boiling",
     '0x60' : "Filter, No carafe, Hotplate On",
