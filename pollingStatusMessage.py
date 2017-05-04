@@ -27,7 +27,7 @@ try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 except socket.error:
     if command_line.notify == 'GNOME':
-        Gnome =  Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket")
+        Gnome =  Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket", "caffeine-cup-empty")
         Gnome.show()
     else:
         print 'Failed to create socket'
@@ -189,16 +189,16 @@ while 1:
 
             if len(c) > 0:
                 if a[1] != c[1]:
-                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageStatus)
+                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageStatus, "caffeine-cup-full")
                     Gnome.show()
                 if a[2] != c[2]:
-                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageWater)
+                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageWater, "caffeine-cup-full")
                     Gnome.show()
                 if a[4] != c[4]:
-                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageStrength)
+                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageStrength, "caffiene-cup-full")
                     Gnome.show()
                 if a[5] != c[5]:
-                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageCups)
+                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageCups, "caffeine-cup-full")
                     Gnome.show()
             else:
                 Gnome = Notify.Notification.new("Smarter Coffee", \
@@ -206,7 +206,8 @@ while 1:
                                         textMessageStatus + "\n" + \
                                         textMessageWater + "\n" + \
                                         textMessageStrength + "\n" + \
-                                        textMessageCups)
+                                        textMessageCups,
+                                        "caffeine-cup-full")
                 Gnome.show()
 
         else:
