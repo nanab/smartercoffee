@@ -36,7 +36,7 @@ except socket.error:
 if command_line.notify == None:
     print 'Socket Created'
 
-host = '192.168.1.15'
+host = '192.168.1.2'
 port = 2081
 statusMessageType = {
     '0x4' : "Filter, ?",
