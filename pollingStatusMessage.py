@@ -36,7 +36,7 @@ except socket.error:
 if command_line.notify == None:
     print 'Socket Created'
 
-host = '192.168.1.15'
+host = '192.168.1.2'
 port = 2081
 statusMessageType = {
     '0x4' : "Filter, ?",
@@ -191,13 +191,13 @@ while 1:
                 if a[1] != c[1]:
                     Gnome = Notify.Notification.new("Smarter Coffee", textMessageStatus, "caffeine-cup-full")
                     Gnome.show()
-                if a[2] != c[2]:
+                if a[2] != c[2] and len(a) == 0:
                     Gnome = Notify.Notification.new("Smarter Coffee", textMessageWater, "caffeine-cup-full")
                     Gnome.show()
-                if a[4] != c[4]:
+                if a[4] != c[4] and len(a) == 0:
                     Gnome = Notify.Notification.new("Smarter Coffee", textMessageStrength, "caffiene-cup-full")
                     Gnome.show()
-                if a[5] != c[5]:
+                if a[5] != c[5] and len(a) == 0:
                     Gnome = Notify.Notification.new("Smarter Coffee", textMessageCups, "caffeine-cup-full")
                     Gnome.show()
             else:
