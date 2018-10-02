@@ -4,8 +4,6 @@ Python script for controlling Smarter Coffee machine http://smarter.am/
 
 As there is no open api for this wifi enabled machine i have made a small script for contolling it from a computer.
 
-TODO more description...
-
 ## Send command to machine
 
 ```
@@ -33,6 +31,8 @@ python pollingStatusMessage.py
 
 This command uses an optional parameter `--notify GNOME`.
 
+This IP Address of the machine can be set via option `-i` whith a default of `192.168.1.2`.
+
 ## Output Machine Status
 
 This command is similar to the polling except that it does output the current status of the machine only once. It it intended as an integration call with a smart home system which does the permanent monitoring my other means.
@@ -40,3 +40,5 @@ This command is similar to the polling except that it does output the current st
 ```
 python outputStatusMessage.py
 ```
+
+This IP Address of the machine can be set via option `-i` whith a default of `192.168.1.2`.
