@@ -154,69 +154,42 @@ s.connect((host, port))
 if command_line.notify == None:
     print 'Socket Connected to ' + host + ' on ip ' + host
 
-while 1:
-    reply = s.recv(4096)
-    incommingCommandFirst = reply
-    if incommingCommandFirst != incommingCommandSecond: # only display message if something is changed
-        c = array("B", incommingCommandSecond)
-        incommingCommandSecond = reply
-        a = array("B", incommingCommandSecond)
-        b = map(hex, a)
-        deviceMessage = b[0]
-        statusMessage = b[1]
-        waterLevelMessage = b[2]
-        wifiStrenghtMessage = b[3]
-        strengthMessage = b[4]
-        cupsMessage = b[5]
+reply = s.recv(4096)
+incommingCommandFirst = reply
+if incommingCommandFirst != incommingCommandSecond: # only display message if something is changed
+    c = array("B", incommingCommandSecond)
+    incommingCommandSecond = reply
+    a = array("B", incommingCommandSecond)
+    b = map(hex, a)
+    deviceMessage = b[0]
+    statusMessage = b[1]
+    waterLevelMessage = b[2]
+    wifiStrenghtMessage = b[3]
+    strengthMessage = b[4]
+    cupsMessage = b[5]
 
-        try:
-            textMessageStatus = 'Status: ' + statusMessageType[statusMessage]
-        except:
-            textMessageStatus = 'Status: Unknown (' + statusMessage +')'
+    try:
+        textMessageStatus = 'Status: ' + statusMessageType[statusMessage]
+    except:
+        textMessageStatus = 'Status: Unknown (' + statusMessage +')'
     
-        try:
-            textMessageWater = 'Water Level: ' + waterLevelMessageType[waterLevelMessage]
-        except:
-            textMessageWater = 'Water Level: Unknown (' + waterLevelMessage +')'
+    try:
+        textMessageWater = 'Water Level: ' + waterLevelMessageType[waterLevelMessage]
+    except:
+        textMessageWater = 'Water Level: Unknown (' + waterLevelMessage +')'
 
-        try:
-            textMessageStrength = 'Strength: ' + strengthMessageType[strengthMessage]
-        except:
-            textMessageStrength = 'Strength: Unknown (' + strengthMessage +')'
+    try:
+        textMessageStrength = 'Strength: ' + strengthMessageType[strengthMessage]
+    except:
+        textMessageStrength = 'Strength: Unknown (' + strengthMessage +')'
 
-        try:
-            textMessageCups = 'Cups: ' + cupsMessageType[cupsMessage]
-        except:
-            textMessageCups = 'Cups: Unknown (' + cupsMessage +')'
+    try:
+        textMessageCups = 'Cups: ' + cupsMessageType[cupsMessage]
+    except:
+        textMessageCups = 'Cups: Unknown (' + cupsMessage +')'
 
-        if command_line.notify == 'GNOME':
-
-            if len(c) > 0:
-                if a[1] != c[1]:
-                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageStatus, "caffeine-cup-full")
-                    Gnome.show()
-                if a[2] != c[2] and len(a) == 0:
-                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageWater, "caffeine-cup-full")
-                    Gnome.show()
-                if a[4] != c[4] and len(a) == 0:
-                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageStrength, "caffiene-cup-full")
-                    Gnome.show()
-                if a[5] != c[5] and len(a) == 0:
-                    Gnome = Notify.Notification.new("Smarter Coffee", textMessageCups, "caffeine-cup-full")
-                    Gnome.show()
-            else:
-                Gnome = Notify.Notification.new("Smarter Coffee", \
-                                        "Socket created and connected to " + host + "\n" + \
-                                        textMessageStatus + "\n" + \
-                                        textMessageWater + "\n" + \
-                                        textMessageStrength + "\n" + \
-                                        textMessageCups,
-                                        "caffeine-cup-full")
-                Gnome.show()
-
-        else:
-            print
-            print textMessageStatus
-            print textMessageWater
-            print textMessageStrength
-            print textMessageCups
+    print
+    print textMessageStatus
+    print textMessageWater
+    print textMessageStrength
+    print textMessageCups
