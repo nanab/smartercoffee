@@ -5,6 +5,7 @@ import sys  #for exit
 import argparse # parser
 from array import array
 #create an INET, STREAMing socket
+
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 except socket.error:
@@ -23,6 +24,7 @@ parser.add_argument("-c", help="Define how many cups that will be brewed choose 
 parser.add_argument("-g", help="Define if beans or filter should be used. 1 for beans, 2 for filter", type=int)
 parser.add_argument("-m", help="Define how many minutes hotplateshould be on. define in minutes minimum 5", type=int)
 parser.add_argument("-s", help="Define which strength it should be. choose between 1 - 3 ", type=int)
+parser.add_argument("-i", help="Define IP-address of machine ", type=str)
 args = parser.parse_args()
 
 returnMessageType = {
@@ -32,6 +34,9 @@ returnMessageType = {
 	'0x3' : "Error: Not enough water",
 	'0x4' : "Error: You sent wrong value",
 }
+
+if args.i:
+    host = args.i
 
 #Connect to remote server
 s.connect((host , port))
@@ -72,8 +77,8 @@ def coffeeStartFunc(cupsStart, strenghtStart, grindStart, hotPlateTime): #cupsSt
 	if strenghtStart >= 0 and strenghtStart <= 2:
 		strengthHex = "%0.2X" % strenghtStart # convert to hex
 	else:
-		print "Error: coffe strength must be a value between 1 - 3 autosetting 1"
-		strengthHex = "00"	
+		print "Error: coffe strength must be a value between 1 - 3 autosetting 3"
+		strengthHex = "02"	
 		
 	if grindStart == 1:
 		grindHex = "01"
@@ -118,7 +123,6 @@ def returnMessage(incomingData):
 	returnMessage = b[1]
 	print "Return: " + returnMessageType[returnMessage]
 	
-		
 if args.f:
 	if args.f <= 6 and args.f >= 1:
 		if args.f == 1:
