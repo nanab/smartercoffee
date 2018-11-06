@@ -23,19 +23,6 @@ if command_line.notify == 'GNOME':
 
 incommingCommandSecond = ""
 incommingCommandFirst = ""
-#create an INET, STREAMing socket
-try:
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-except socket.error:
-    if command_line.notify == 'GNOME':
-        Gnome =  Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket", "caffeine-cup-empty")
-        Gnome.show()
-    else:
-        print 'Failed to create socket'
-    sys.exit()
-
-if command_line.notify == None:
-    print 'Socket Created'
 
 host = '192.168.1.2'
 port = 2081
@@ -108,6 +95,18 @@ cupsMessageType = { #TODO investigate what the first number does?
     '0x3a' : "10",
     '0x3b' : "11",
     '0x3c' : "12",
+    '0x41' : "1",
+    '0x42' : "2",
+    '0x43' : "3",
+    '0x44' : "4",
+    '0x45' : "5",
+    '0x46' : "6",
+    '0x47' : "7",
+    '0x48' : "8",
+    '0x49' : "9",
+    '0x4a' : "10",
+    '0x4b' : "11",
+    '0x4c' : "12",
     '0x61' : "1",
     '0x62' : "2",
     '0x63' : "3",
@@ -149,11 +148,29 @@ cupsMessageType = { #TODO investigate what the first number does?
 if command_line.i:
     host = command_line.i
 
-#Connect to remote server
-s.connect((host, port))
+
+# Create an INET, STREAMing socket
+try:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Set Timeout so the script doesn't run forever in case of network blocking
+    s.settimeout(10)
+    # Connect to remote server
+    s.connect((host, port))
+    # Get back to blocking state after we connected
+    s.settimeout(None)
+except socket.error:
+    if command_line.notify == 'GNOME':
+        Gnome =  Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket", "caffeine-cup-empty")
+        Gnome.show()
+    else:
+        print 'Failed to create socket'
+    sys.exit()
 
 if command_line.notify == None:
-    print 'Socket Connected to ' + host + ' on ip ' + host
+    print 'Socket Created'
+
+if command_line.notify == None:
+    print 'Socket Connected to ' + host + '.'
 
 reply = s.recv(4096)
 incommingCommandFirst = reply
