@@ -195,7 +195,7 @@ if incommingCommandFirst != incommingCommandSecond: # only display message if so
     deviceMessage = b[0]
     statusMessage = b[1]
     waterLevelMessage = b[2]
-    wifiStrenghtMessage = b[3]
+    wifiStrengthMessage = b[3]
     strengthMessage = b[4]
     cupsMessage = b[5]
 
