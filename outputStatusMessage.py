@@ -21,9 +21,6 @@ if command_line.notify == 'GNOME':
     from gi.repository import Notify
     Notify.init("Gnome")
 
-incommingCommandSecond = ""
-incommingCommandFirst = ""
-
 host = '192.168.1.2'
 port = 2081
 statusMessageType = {
@@ -108,6 +105,18 @@ cupsMessageType = { #TODO investigate what the first number does?
     '0x4a' : "10",
     '0x4b' : "11",
     '0x4c' : "12",
+    '0x51' : "1",
+    '0x52' : "2",
+    '0x53' : "3",
+    '0x54' : "4",
+    '0x55' : "5",
+    '0x56' : "6",
+    '0x57' : "7",
+    '0x58' : "8",
+    '0x59' : "9",
+    '0x5a' : "10",
+    '0x5b' : "11",
+    '0x5c' : "12",
     '0x61' : "1",
     '0x62' : "2",
     '0x63' : "3",
@@ -188,51 +197,47 @@ except socket.error:
         Gnome =  Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket", "caffeine-cup-empty")
         Gnome.show()
     else:
-        print 'Failed to create socket'
+        print ('Failed to create socket')
     sys.exit()
 
 if command_line.notify == None:
-    print 'Socket Created'
+    print ('Socket Created')
 
 if command_line.notify == None:
-    print 'Socket Connected to ' + host + '.'
+    print ('Socket Connected to ' + host + '.')
 
 reply = s.recv(4096)
-incommingCommandFirst = reply
-if incommingCommandFirst != incommingCommandSecond: # only display message if something is changed
-    c = array("B", incommingCommandSecond)
-    incommingCommandSecond = reply
-    a = array("B", incommingCommandSecond)
-    b = map(hex, a)
-    deviceMessage = b[0]
-    statusMessage = b[1]
-    waterLevelMessage = b[2]
-    wifiStrengthMessage = b[3]
-    strengthMessage = b[4]
-    cupsMessage = b[5]
+a = array("B", reply)
+b = list(map(hex, a))
+deviceMessage = b[0]
+statusMessage = b[1]
+waterLevelMessage = b[2]
+wifiStrengthMessage = b[3]
+strengthMessage = b[4]
+cupsMessage = b[5]
 
-    try:
-        textMessageStatus = 'Status: ' + statusMessageType[statusMessage]
-    except:
-        textMessageStatus = 'Status: Unknown (' + statusMessage +')'
-    
-    try:
-        textMessageWater = 'Water Level: ' + waterLevelMessageType[waterLevelMessage]
-    except:
-        textMessageWater = 'Water Level: Unknown (' + waterLevelMessage +')'
+try:
+    textMessageStatus = 'Status: ' + statusMessageType[statusMessage]
+except:
+    textMessageStatus = 'Status: Unknown (' + statusMessage +')'
 
-    try:
-        textMessageStrength = 'Strength: ' + strengthMessageType[strengthMessage]
-    except:
-        textMessageStrength = 'Strength: Unknown (' + strengthMessage +')'
+try:
+    textMessageWater = 'Water Level: ' + waterLevelMessageType[waterLevelMessage]
+except:
+    textMessageWater = 'Water Level: Unknown (' + waterLevelMessage +')'
 
-    try:
-        textMessageCups = 'Cups: ' + cupsMessageType[cupsMessage]
-    except:
-        textMessageCups = 'Cups: Unknown (' + cupsMessage +')'
+try:
+    textMessageStrength = 'Strength: ' + strengthMessageType[strengthMessage]
+except:
+    textMessageStrength = 'Strength: Unknown (' + strengthMessage +')'
 
-    print
-    print textMessageStatus
-    print textMessageWater
-    print textMessageStrength
-    print textMessageCups
+try:
+    textMessageCups = 'Cups: ' + cupsMessageType[cupsMessage]
+except:
+    textMessageCups = 'Cups: Unknown (' + cupsMessage +')'
+
+print ('')
+print (textMessageStatus)
+print (textMessageWater)
+print (textMessageStrength)
+print (textMessageCups)

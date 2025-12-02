@@ -21,8 +21,8 @@ if command_line.notify == 'GNOME':
     from gi.repository import Notify
     Notify.init("Gnome")
 
-incommingCommandSecond = ""
-incommingCommandFirst = ""
+incommingCommandSecond = []
+incommingCommandFirst = []
 #create an INET, STREAMing socket
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -31,11 +31,11 @@ except socket.error:
         Gnome =  Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket", "caffeine-cup-empty")
         Gnome.show()
     else:
-        print 'Failed to create socket'
+        print ('Failed to create socket')
     sys.exit()
 
 if command_line.notify == None:
-    print 'Socket Created'
+    print ('Socket Created')
 
 host = '192.168.1.2'
 port = 2081
@@ -121,6 +121,18 @@ cupsMessageType = { #TODO investigate what the first number does?
     '0x4a' : "10",
     '0x4b' : "11",
     '0x4c' : "12",
+    '0x51' : "1",
+    '0x52' : "2",
+    '0x53' : "3",
+    '0x54' : "4",
+    '0x55' : "5",
+    '0x56' : "6",
+    '0x57' : "7",
+    '0x58' : "8",
+    '0x59' : "9",
+    '0x5a' : "10",
+    '0x5b' : "11",
+    '0x5c' : "12",
     '0x61' : "1",
     '0x62' : "2",
     '0x63' : "3",
@@ -190,7 +202,7 @@ if command_line.i:
 s.connect((host, port))
 
 if command_line.notify == None:
-    print 'Socket Connected to ' + host + ' on ip ' + host
+    print ('Socket Connected to ' + host + ' on ip ' + host)
 
 while 1:
     reply = s.recv(4096)
@@ -199,7 +211,7 @@ while 1:
         c = array("B", incommingCommandSecond)
         incommingCommandSecond = reply
         a = array("B", incommingCommandSecond)
-        b = map(hex, a)
+        b = list(map(hex, a))
         deviceMessage = b[0]
         statusMessage = b[1]
         waterLevelMessage = b[2]
@@ -253,8 +265,8 @@ while 1:
                 Gnome.show()
 
         else:
-            print
-            print textMessageStatus
-            print textMessageWater
-            print textMessageStrength
-            print textMessageCups
+            print ('')
+            print (textMessageStatus)
+            print (textMessageWater)
+            print (textMessageStrength)
+            print (textMessageCups)
