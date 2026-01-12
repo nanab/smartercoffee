@@ -21,22 +21,6 @@ if command_line.notify == 'GNOME':
     from gi.repository import Notify
     Notify.init("Gnome")
 
-incommingCommandSecond = ""
-incommingCommandFirst = ""
-#create an INET, STREAMing socket
-try:
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-except socket.error:
-    if command_line.notify == 'GNOME':
-        Gnome =  Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket", "caffeine-cup-empty")
-        Gnome.show()
-    else:
-        print 'Failed to create socket'
-    sys.exit()
-
-if command_line.notify == None:
-    print 'Socket Created'
-
 host = '192.168.1.2'
 port = 2081
 statusMessageType = {
@@ -44,6 +28,7 @@ statusMessageType = {
     '0x5' : "Filter, OK to start",
     '0x6' : "Filter, OK to start",
     '0x7' : "Beans, OK to start",
+    '0xb' : "Grinding",
     '0x20' : "Filter, No carafe",
     '0x22' : "Beans, No carafe",
     '0x23' : "Beans, Not enough water",
@@ -62,6 +47,7 @@ waterLevelMessageType = {
     '0x0' : "Not enough water",
     '0x1' : "Low",
     '0x2' : "Half",
+    '0x11' : "Half",
     '0x12' : "Half",
     '0x13' : "Full",
 }
@@ -107,6 +93,30 @@ cupsMessageType = { #TODO investigate what the first number does?
     '0x3a' : "10",
     '0x3b' : "11",
     '0x3c' : "12",
+    '0x41' : "1",
+    '0x42' : "2",
+    '0x43' : "3",
+    '0x44' : "4",
+    '0x45' : "5",
+    '0x46' : "6",
+    '0x47' : "7",
+    '0x48' : "8",
+    '0x49' : "9",
+    '0x4a' : "10",
+    '0x4b' : "11",
+    '0x4c' : "12",
+    '0x51' : "1",
+    '0x52' : "2",
+    '0x53' : "3",
+    '0x54' : "4",
+    '0x55' : "5",
+    '0x56' : "6",
+    '0x57' : "7",
+    '0x58' : "8",
+    '0x59' : "9",
+    '0x5a' : "10",
+    '0x5b' : "11",
+    '0x5c' : "12",
     '0x61' : "1",
     '0x62' : "2",
     '0x63' : "3",
@@ -119,6 +129,18 @@ cupsMessageType = { #TODO investigate what the first number does?
     '0x6a' : "10",
     '0x6b' : "11",
     '0x6c' : "12",
+    '0x71' : "1",
+    '0x72' : "2",
+    '0x73' : "3",
+    '0x74' : "4",
+    '0x75' : "5",
+    '0x76' : "6",
+    '0x77' : "7",
+    '0x78' : "8",
+    '0x79' : "9",
+    '0x7a' : "10",
+    '0x7b' : "11",
+    '0x7c' : "12",
     '0x81' : "1",
     '0x82' : "2",
     '0x83' : "3",
@@ -131,6 +153,18 @@ cupsMessageType = { #TODO investigate what the first number does?
     '0x8a' : "10",
     '0x8b' : "11",
     '0x8c' : "12",
+    '0xa1' : "1",
+    '0xa2' : "2",
+    '0xa3' : "3",
+    '0xa4' : "4",
+    '0xa5' : "5",
+    '0xa6' : "6",
+    '0xa7' : "7",
+    '0xa8' : "8",
+    '0xa9' : "9",
+    '0xaa' : "10",
+    '0xab' : "11",
+    '0xac' : "12",
     '0xc1' : "1",
     '0xc2' : "2",
     '0xc3' : "3",
@@ -148,48 +182,62 @@ cupsMessageType = { #TODO investigate what the first number does?
 if command_line.i:
     host = command_line.i
 
-#Connect to remote server
-s.connect((host, port))
+
+# Create an INET, STREAMing socket
+try:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Set Timeout so the script doesn't run forever in case of network blocking
+    s.settimeout(10)
+    # Connect to remote server
+    s.connect((host, port))
+    # Get back to blocking state after we connected
+    s.settimeout(None)
+except socket.error:
+    if command_line.notify == 'GNOME':
+        Gnome =  Notify.Notification.new("Smarter Coffee", "Failed to create coffee socket", "caffeine-cup-empty")
+        Gnome.show()
+    else:
+        print ('Failed to create socket')
+    sys.exit()
 
 if command_line.notify == None:
-    print 'Socket Connected to ' + host + ' on ip ' + host
+    print ('Socket Created')
+
+if command_line.notify == None:
+    print ('Socket Connected to ' + host + '.')
 
 reply = s.recv(4096)
-incommingCommandFirst = reply
-if incommingCommandFirst != incommingCommandSecond: # only display message if something is changed
-    c = array("B", incommingCommandSecond)
-    incommingCommandSecond = reply
-    a = array("B", incommingCommandSecond)
-    b = map(hex, a)
-    deviceMessage = b[0]
-    statusMessage = b[1]
-    waterLevelMessage = b[2]
-    wifiStrenghtMessage = b[3]
-    strengthMessage = b[4]
-    cupsMessage = b[5]
+a = array("B", reply)
+b = list(map(hex, a))
+deviceMessage = b[0]
+statusMessage = b[1]
+waterLevelMessage = b[2]
+wifiStrengthMessage = b[3]
+strengthMessage = b[4]
+cupsMessage = b[5]
 
-    try:
-        textMessageStatus = 'Status: ' + statusMessageType[statusMessage]
-    except:
-        textMessageStatus = 'Status: Unknown (' + statusMessage +')'
-    
-    try:
-        textMessageWater = 'Water Level: ' + waterLevelMessageType[waterLevelMessage]
-    except:
-        textMessageWater = 'Water Level: Unknown (' + waterLevelMessage +')'
+try:
+    textMessageStatus = 'Status: ' + statusMessageType[statusMessage]
+except:
+    textMessageStatus = 'Status: Unknown (' + statusMessage +')'
 
-    try:
-        textMessageStrength = 'Strength: ' + strengthMessageType[strengthMessage]
-    except:
-        textMessageStrength = 'Strength: Unknown (' + strengthMessage +')'
+try:
+    textMessageWater = 'Water Level: ' + waterLevelMessageType[waterLevelMessage]
+except:
+    textMessageWater = 'Water Level: Unknown (' + waterLevelMessage +')'
 
-    try:
-        textMessageCups = 'Cups: ' + cupsMessageType[cupsMessage]
-    except:
-        textMessageCups = 'Cups: Unknown (' + cupsMessage +')'
+try:
+    textMessageStrength = 'Strength: ' + strengthMessageType[strengthMessage]
+except:
+    textMessageStrength = 'Strength: Unknown (' + strengthMessage +')'
 
-    print
-    print textMessageStatus
-    print textMessageWater
-    print textMessageStrength
-    print textMessageCups
+try:
+    textMessageCups = 'Cups: ' + cupsMessageType[cupsMessage]
+except:
+    textMessageCups = 'Cups: Unknown (' + cupsMessage +')'
+
+print ('')
+print (textMessageStatus)
+print (textMessageWater)
+print (textMessageStrength)
+print (textMessageCups)
